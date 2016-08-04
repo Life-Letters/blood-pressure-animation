@@ -6,7 +6,7 @@
  * @description
  * # bloodPressureAnimation
  */
-angular.module('animationBloodPressureApp')
+angular.module('life.animations.blood-pressure')
   .directive('bloodPressureAnimation', function (P5, _) {
     return {
       template: '<div id="blood-pressure-animation"></div>',

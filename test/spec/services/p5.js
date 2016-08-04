@@ -3,7 +3,7 @@
 describe('Service: p5', function () {
 
   // load the service's module
-  beforeEach(module('animationBloodPressureApp'));
+  beforeEach(module('life.animations.blood-pressure'));
 
   // instantiate service
   var p5;

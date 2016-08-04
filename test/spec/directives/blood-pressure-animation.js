@@ -3,7 +3,7 @@
 describe('Directive: bloodPressureAnimation', function () {
 
   // load the directive's module
-  beforeEach(module('animationBloodPressureApp'));
+  beforeEach(module('life.animations.blood-pressure'));
 
   var element,
     scope;

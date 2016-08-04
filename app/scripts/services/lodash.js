@@ -7,7 +7,7 @@
  * # lodash
  * Factory in the animationBloodPressureApp.
  */
-angular.module('animationBloodPressureApp')
+angular.module('life.animations.blood-pressure')
   .factory('_', function ($window) {
     return $window._;
   });

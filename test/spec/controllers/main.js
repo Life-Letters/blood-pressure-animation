@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('animationBloodPressureApp'));
+  beforeEach(module('life.animations.blood-pressure'));
 
   var MainCtrl,
     scope;
