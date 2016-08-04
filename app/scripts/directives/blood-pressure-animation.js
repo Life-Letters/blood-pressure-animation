@@ -47,8 +47,8 @@ angular.module('animationBloodPressureApp')
         	var heartSize = height * 0.35;
 
         	var bloodCellCount = 100;
-        	var bloodCellSpeedMin = 1;
-        	var bloodCellSpeedVariation = 4;
+        	var bloodCellSpeedMin = 5;
+        	var bloodCellSpeedVariation = 15;
         	var bloodRotationAmount = p.PI*0.01;
 
         	var pressure = 80;
@@ -67,7 +67,7 @@ angular.module('animationBloodPressureApp')
         		constructor: BloodCell,
 
         		draw: function(pressure) {
-        			this.position.x += this.scale * (bloodCellSpeedMin + bloodCellSpeedVariation * (1+norm(pressure, pressureNormalMin, pressureHighMax)));
+        			this.position.x += this.scale * (bloodCellSpeedMin + bloodCellSpeedVariation * norm(pressure, pressureNormalMin, pressureHighMax));
 
         			// Have we gone too far?
         			if ( this.position.x > width+this.size ) {
@@ -91,6 +91,7 @@ angular.module('animationBloodPressureApp')
         		images.valve 			= p.loadImage('images/icons_valve.png');
         		images.needle 		= p.loadImage('images/icons_needle.png');
         		images.bloodCell 	= p.loadImage('images/icon_blood-cell.png');
+        		images.overlay 		= p.loadImage('images/overlay.png');
         	};
         	p.setup = function() {
         		p.createCanvas(width, height);
@@ -177,11 +178,15 @@ angular.module('animationBloodPressureApp')
 						p.curveVertex(-width, height*2);
 						p.endShape();
 
+						p.imageMode(p.CORNER);
+						p.image(images.overlay, 0, 0, width, height);
+
 				    // Draw the heart:
 				    var heartScale = 1 + norm(pressure, pressureNormalMin, pressureNormalMax) * heartScaleChange;
 				    p.applyMatrix();
 				    p.translate(width-heartSize/2-valveSize/4, height-heartSize/2-valveSize/4);
 				    p.scale(heartScale);
+				    p.imageMode(p.CENTER);
         		p.image(images.heart,0,0,heartSize,heartSize);
         		p.resetMatrix();
 
@@ -192,6 +197,7 @@ angular.module('animationBloodPressureApp')
         		// Needle
         		p.angleMode(p.RADIANS);
 				    p.rotate(p.PI*valveAmount - p.PI/2);
+				    p.imageMode(p.CENTER);
 				    p.image(images.needle,0,0,valveSize,valveSize);
 				    p.resetMatrix();
         	};
