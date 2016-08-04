@@ -36,7 +36,7 @@ angular.module('animationBloodPressureApp')
 
 	    		// Artery walls:
 	    		var arteryStretchDistance = 20;
-	    		var arteryWidth = 50, 
+	    		var arteryWidth = 60, 
 	    				arteryHalfWidth = arteryWidth/2;
 
 	    		var arteryMidY = height/2,
@@ -46,8 +46,10 @@ angular.module('animationBloodPressureApp')
         	var valveSize = height * 0.2;
         	var heartSize = height * 0.35;
 
+        	var bloodCellCount = 100;
         	var bloodCellSpeedMin = 1;
         	var bloodCellSpeedVariation = 4;
+        	var bloodRotationAmount = p.PI*0.01;
 
         	var pressure = 80;
         	var heartReadings = [];
@@ -58,6 +60,7 @@ angular.module('animationBloodPressureApp')
         		this.position = position;
         		this.scale = scale;
         		this.size = 10*scale;
+        		this.rotation = p.PI*2*Math.random();
         	};
 
         	BloodCell.prototype = {
@@ -71,9 +74,15 @@ angular.module('animationBloodPressureApp')
         				this.position.x = -this.size;
         			}
 
+        			this.rotation += bloodRotationAmount;
+
         			p.fill(255, 0, 0);
         			p.imageMode(p.CENTER);
-        			p.image(images.bloodCell, this.position.x, this.position.y, this.size, this.size);
+        			p.applyMatrix();
+        			p.translate(this.position.x, this.position.y);
+        			p.rotate(this.rotation);
+        			p.image(images.bloodCell, 0, 0, this.size, this.size);
+        			p.resetMatrix();
         		},
         	}
 
@@ -87,13 +96,12 @@ angular.module('animationBloodPressureApp')
         		p.createCanvas(width, height);
         		p.frameRate(30);
 
-        		var bloodCellCount = 30;
         		_.times(bloodCellCount, function(i) {
         			bloodCells.push(
         					new BloodCell(
         						p.createVector(
         							p.random(width), 
-        							p.random(arteryBottomY, arteryTopY)), 
+        							p.random(arteryTopY-arteryStretchDistance, arteryBottomY+arteryStretchDistance)), 
         						1+(i/bloodCellCount)
         					)
         				);
