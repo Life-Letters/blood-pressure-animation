@@ -22,16 +22,14 @@ angular.module('life.animations.blood-pressure', [
       	}
 
         // Ensure we take up as much space as permitted.
-        element.css('position', 'absolute');
-        element.css('top', 0);
-        element.css('left', 0);
-        element.css('height', '100%');
-        element.css('width', '100%');
+        // element.css('position', 'absolute');
+        // element.css('top', 0);
+        // element.css('left', 0);
+        // element.css('height', '100%');
+        // element.css('width', '100%');
 
-        // Keep it square
-      	var size = Math.min(element.prop('clientWidth'), element.prop('clientHeight')),
-            width = size, 
-      			height = size;
+      	var width = element.prop('clientWidth'), 
+      			height = element.prop('clientWidth');
       	
         new P5(function(p) {
 
