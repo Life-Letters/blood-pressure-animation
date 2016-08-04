@@ -101,9 +101,7 @@ angular.module('animationBloodPressureApp')
         			var yMin = arteryTopY-arteryStretchDistance,
         					yMax = arteryBottomY+arteryStretchDistance,
         					yRange = yMax-yMin,
-        					// y = p.sin(Math.random()*p.PI) * yRange + yMin;
-        					// y = (1 - 4*Math.pow(Math.random()-0.5, 2)) * yRange + yMin;
-        					// y = 1 / (1 + Math.pow(Math.E, -20*(Math.random()-0.5))) * yRange + yMin;
+        					// An s-curve (with some randomness), to position cells mostly towards the center.
         					y = (0.5 - 4*Math.pow(Math.random()-0.5, 3) + 0.01*(Math.random()-0.5)) * yRange + yMin;
 
         			bloodCells.push(
