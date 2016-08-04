@@ -17,6 +17,8 @@ angular.module('animationBloodPressureApp')
 
       	var pressureNormalMin = 80;
       	var pressureNormalMax = 120;
+      	var pressureHighMin = 100;
+      	var pressureHighMax = 180;
 
       	var pressureValveMin = 0;
       	var pressureValveMax = 200;
@@ -63,8 +65,31 @@ angular.module('animationBloodPressureApp')
 
         		var valveAmount = norm(pressure, pressureValveMin, pressureValveMax);
 
-        		p.imageMode(p.CENTER);
 
+        		p.strokeWeight(2);
+        		// Gague pipe
+        		p.line(p.width/2-2, valveSize, p.width/2-2, p.height/2);
+        		p.line(p.width/2+2, valveSize, p.width/2+2, p.height/2);
+
+        		// Artery walls:
+        		var arteryStretchDistance = 50;
+        		var arteryWidth = 50, 
+        				arteryHalfWidth = arteryWidth/2;
+        		var arteryBendCtrPt = arteryStretchDistance * norm(pressure, pressureNormalMin, pressureHighMax);
+
+        		var arteryTopY = p.height/2 - arteryWidth/2,
+        				arteryBottomY = p.height/2 + arteryWidth/2;
+
+        		p.curve(p.width*-0.5, arteryTopY+arteryBendCtrPt, 
+        				0, arteryTopY, 
+        				p.width, arteryTopY, 
+        				p.width*1.5, arteryTopY+arteryBendCtrPt);
+        		p.curve(p.width*-0.5, arteryBottomY-arteryBendCtrPt, 
+        				0, arteryBottomY, 
+        				p.width, arteryBottomY, 
+        				p.width*1.5, arteryBottomY-arteryBendCtrPt);
+
+        		p.imageMode(p.CENTER);
 				    p.applyMatrix();
 				    p.translate(p.width/2, valveSize);
         		p.image(images.valve, 0,0,valveSize,valveSize);
@@ -77,7 +102,7 @@ angular.module('animationBloodPressureApp')
 				    // Draw the heart:
 				    var heartScale = 1 + norm(pressure, pressureNormalMin, pressureNormalMax) * heartScaleChange;
 				    p.applyMatrix();
-				    p.translate(p.width-heartSize, p.height-heartSize);
+				    p.translate(p.width-heartSize/2-10, p.height-heartSize/2-10);
 				    p.scale(heartScale)
         		p.image(images.heart,0,0,heartSize,heartSize);
         		p.resetMatrix();
