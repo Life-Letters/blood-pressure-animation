@@ -12,7 +12,7 @@ angular.module('life.animations.blood-pressure', [
   ])
   .directive('bloodPressureAnimation', function (P5, _) {
     return {
-      template: '<div id="blood-pressure-animation"></div>',
+      template: '<div id="{{ id }}"></div>',
       replace: true,
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
@@ -20,6 +20,8 @@ angular.module('life.animations.blood-pressure', [
       	function norm(val, min, max) {
       		return (val-min)/(max-min);
       	}
+
+        scope.id = '_bloodPressure-'+_.random(1000000,10000000);
 
         // Ensure we take up as much space as permitted.
         // element.css('position', 'absolute');
@@ -215,7 +217,7 @@ angular.module('life.animations.blood-pressure', [
 				    p.image(images.needle,0,0,valveSize,valveSize);
 				    p.resetMatrix();
         	};
-        }, 'blood-pressure-animation');
+        }, scope.id);
       }
     };
   });
