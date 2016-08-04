@@ -23,6 +23,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/p5.js-sound/lib/p5.js',
       'bower_components/p5.js-sound/lib/p5.sound.js',
+      'bower_components/lodash/lodash.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

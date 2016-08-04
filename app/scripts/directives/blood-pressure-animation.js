@@ -7,7 +7,7 @@
  * # bloodPressureAnimation
  */
 angular.module('animationBloodPressureApp')
-  .directive('bloodPressureAnimation', function () {
+  .directive('bloodPressureAnimation', function (P5, _) {
     return {
       template: '<div id="blood-pressure-animation"></div>',
       replace: true,
@@ -27,8 +27,10 @@ angular.module('animationBloodPressureApp')
       	var valveSize = -1;
       	var heartSize = -1;
 
-        new p5(function(p) {
+        new P5(function(p) {
+
         	var pressure = 80;
+        	var heartReadings = [];
 
         	function norm(val, min, max) {
         		return (val-min)/(max-min);
@@ -50,12 +52,21 @@ angular.module('animationBloodPressureApp')
 
         		// Heart beat
         		pressure = pressureNormalMin + (p.sin(p.millis()/1000*2*p.PI/heartbeatDuration)+1)/2*(pressureNormalMax-pressureNormalMin);
+
+        		heartReadings.push(pressure);
+        		if (heartReadings.length > p.width) {
+        			heartReadings = _.tail(heartReadings);
+        		}
+        		_.each(heartReadings, function(r, i) {
+        			p.point(i, p.height - r);
+        		});
+
         		var valveAmount = norm(pressure, pressureValveMin, pressureValveMax);
 
         		p.imageMode(p.CENTER);
 
 				    p.applyMatrix();
-				    p.translate(p.width/2, valveSize*1.5);
+				    p.translate(p.width/2, valveSize);
         		p.image(images.valve, 0,0,valveSize,valveSize);
 
         		p.angleMode(p.RADIANS);
