@@ -6,7 +6,10 @@
  * @description
  * # bloodPressureAnimation
  */
-angular.module('life.animations.blood-pressure')
+angular.module('life.animations.blood-pressure', [
+    'life.util.p5',
+    'life.util.lodash',
+  ])
   .directive('bloodPressureAnimation', function (P5, _) {
     return {
       template: '<div id="blood-pressure-animation"></div>',

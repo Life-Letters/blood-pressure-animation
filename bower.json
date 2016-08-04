@@ -3,15 +3,14 @@
   "dependencies": {
     "angular": "^1.4.0",
     "p5.js-sound": "https://github.com/processing/p5.js-sound.git#^0.3.0",
-    "lodash": "^4.14.1"
+    "lodash": "^4.14.1",
+    "angular-util-p5": "Life-Letters/angular-util-p5#^0.1.0",
+    "angular-util-lodash": "Life-Letters/angular-util-lodash#^0.1.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
   },
   "main": [
-    "scripts/module.js",
-    "scripts/services/p5.js",
-    "scripts/services/lodash.js",
     "scripts/directives/blood-pressure-animation.js"
   ],
   "appPath": "app",
