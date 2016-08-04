@@ -11,7 +11,7 @@
     "angular-mocks": "^1.4.0"
   },
   "main": [
-    "scripts/directives/blood-pressure-animation.js"
+    "app/scripts/directives/blood-pressure-animation.js"
   ],
   "appPath": "app",
   "moduleName": "life.animations.blood-pressure",
