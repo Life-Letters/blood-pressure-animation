@@ -98,11 +98,17 @@ angular.module('animationBloodPressureApp')
         		p.frameRate(30);
 
         		_.times(bloodCellCount, function(i) {
+        			var yMin = arteryTopY-arteryStretchDistance,
+        					yMax = arteryBottomY+arteryStretchDistance,
+        					yRange = yMax-yMin,
+        					// y = p.sin(Math.random()*p.PI) * yRange + yMin;
+        					// y = (1 - 4*Math.pow(Math.random()-0.5, 2)) * yRange + yMin;
+        					// y = 1 / (1 + Math.pow(Math.E, -20*(Math.random()-0.5))) * yRange + yMin;
+        					y = (0.5 - 4*Math.pow(Math.random()-0.5, 3) + 0.01*(Math.random()-0.5)) * yRange + yMin;
+
         			bloodCells.push(
         					new BloodCell(
-        						p.createVector(
-        							p.random(width), 
-        							p.random(arteryTopY-arteryStretchDistance, arteryBottomY+arteryStretchDistance)), 
+        						p.createVector(p.random(width), y), 
         						1+(i/bloodCellCount)
         					)
         				);
