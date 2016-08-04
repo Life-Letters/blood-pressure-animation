@@ -1,16 +1,35 @@
-# The immunity game
+# Blood Pressure Animation
 
-Can you destroy the virus? In the immunity game, you play a b-cell trying to fight back viruses.
+An interactive animation to demonstate what blood pressure is.
 
 
 ## Development
 
 ### Install
 
-```
-npm install
-bower install
-```
+- Dependencies:
+
+	```
+	npm install
+	bower install
+	```
+
+
+### Running
+
+- LiveReload server:
+
+	```
+	grunt serve
+	```
+
+- Static server
+
+	```
+	grunt build
+	node server
+	```
+
 
 
 ### Importing into other projects
