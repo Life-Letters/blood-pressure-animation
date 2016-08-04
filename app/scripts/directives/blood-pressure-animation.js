@@ -67,27 +67,46 @@ angular.module('animationBloodPressureApp')
 
 
         		p.strokeWeight(2);
+        		p.stroke(0);
         		// Gague pipe
         		p.line(p.width/2-2, valveSize, p.width/2-2, p.height/2);
         		p.line(p.width/2+2, valveSize, p.width/2+2, p.height/2);
 
         		// Artery walls:
-        		var arteryStretchDistance = 50;
+        		var arteryStretchDistance = 20;
         		var arteryWidth = 50, 
         				arteryHalfWidth = arteryWidth/2;
         		var arteryBendCtrPt = arteryStretchDistance * norm(pressure, pressureNormalMin, pressureHighMax);
 
-        		var arteryTopY = p.height/2 - arteryWidth/2,
-        				arteryBottomY = p.height/2 + arteryWidth/2;
+        		var arteryMidY = p.height/2,
+        				arteryTopY = arteryMidY - arteryWidth/2,
+        				arteryBottomY = arteryMidY + arteryWidth/2;
 
-        		p.curve(p.width*-0.5, arteryTopY+arteryBendCtrPt, 
-        				0, arteryTopY, 
-        				p.width, arteryTopY, 
-        				p.width*1.5, arteryTopY+arteryBendCtrPt);
-        		p.curve(p.width*-0.5, arteryBottomY-arteryBendCtrPt, 
-        				0, arteryBottomY, 
-        				p.width, arteryBottomY, 
-        				p.width*1.5, arteryBottomY-arteryBendCtrPt);
+        		// p.curve(p.width*-0.5, arteryTopY+arteryBendCtrPt, 
+        		// 		0, arteryTopY, 
+        		// 		p.width, arteryTopY, 
+        		// 		p.width*1.5, arteryTopY+arteryBendCtrPt);
+        		// p.curve(p.width*-0.5, arteryBottomY-arteryBendCtrPt, 
+        		// 		0, arteryBottomY, 
+        		// 		p.width, arteryBottomY, 
+        		// 		p.width*1.5, arteryBottomY-arteryBendCtrPt);
+
+        		p.fill(250,170,160);
+        		p.stroke(200,70,50);
+        		p.strokeWeight(3);
+						p.beginShape();
+						p.curveVertex(p.width*-0.5, arteryMidY);
+						p.curveVertex(p.width*-0.5, arteryMidY);
+						p.curveVertex(0, arteryTopY);
+						p.curveVertex(p.width*0.5, arteryTopY-arteryBendCtrPt);
+						p.curveVertex(p.width, arteryTopY);
+						p.curveVertex(p.width*1.5, arteryMidY);
+						p.curveVertex(p.width, arteryBottomY);
+						p.curveVertex(p.width*0.5, arteryBottomY+arteryBendCtrPt);
+						p.curveVertex(0, arteryBottomY);
+						p.curveVertex(p.width*-0.5, arteryMidY);
+						p.curveVertex(p.width*-0.5, arteryMidY);
+						p.endShape();
 
         		p.imageMode(p.CENTER);
 				    p.applyMatrix();
