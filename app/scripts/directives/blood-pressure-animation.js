@@ -15,6 +15,7 @@ angular.module('life.animations.blood-pressure', [
       template: '<div id="{{ id }}"></div>',
       replace: true,
       restrict: 'E',
+      scope: true,
       link: function postLink(scope, element, attrs) {
       	
       	function norm(val, min, max) {

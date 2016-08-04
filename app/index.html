@@ -13,13 +13,30 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <style>
+      .block {
+        position:relative;
+        display:inline-block;
+        border:1px black dashed;
+        margin:40px;
+      }
+      .block:first-child {
+        width: 500px;
+      }
+      .block:nth-child(2) {
+        width: 200px;
+      }
+    </style>
   </head>
   <body ng-app="demoApp">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div style="width:500px;height:600px;position:relative;border:1px black dashed;margin:50px auto 0;">
+    <div class="block">
+      <blood-pressure-animation></blood-pressure-animation>
+    </div>
+    <div class="block">
       <blood-pressure-animation></blood-pressure-animation>
     </div>
 
