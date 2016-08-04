@@ -8,6 +8,12 @@
   "devDependencies": {
     "angular-mocks": "^1.4.0"
   },
+  "main": [
+    "scripts/module.js",
+    "scripts/services/p5.js",
+    "scripts/services/lodash.js",
+    "scripts/directives/blood-pressure-animation.js"
+  ],
   "appPath": "app",
   "moduleName": "life.animations.blood-pressure",
   "overrides": {
