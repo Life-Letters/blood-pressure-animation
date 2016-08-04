@@ -391,6 +391,11 @@ module.exports = function (grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
+        },{
+          expand: true,
+          cwd: './app',
+          src: 'blood-pressure-assets/{,*/}*.*',
+          dest: '<%= yeoman.dist %>'
         }]
       },
       styles: {

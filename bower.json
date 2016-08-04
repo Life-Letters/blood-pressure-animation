@@ -1,6 +1,5 @@
 {
-  "name": "animation-blood-pressure",
-  "version": "0.0.0",
+  "name": "blood-pressure-animation",
   "dependencies": {
     "angular": "^1.4.0",
     "p5.js-sound": "https://github.com/processing/p5.js-sound.git#^0.3.0",
@@ -10,7 +9,7 @@
     "angular-mocks": "^1.4.0"
   },
   "appPath": "app",
-  "moduleName": "animationBloodPressureApp",
+  "moduleName": "life.animations.blood-pressure",
   "overrides": {
     "p5.js-sound": {
       "main": [

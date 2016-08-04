@@ -87,11 +87,11 @@ angular.module('life.animations.blood-pressure')
         	}
 
         	p.preload = function() {
-        		images.heart 			= p.loadImage('images/icons_heart.png');
-        		images.valve 			= p.loadImage('images/icons_valve.png');
-        		images.needle 		= p.loadImage('images/icons_needle.png');
-        		images.bloodCell 	= p.loadImage('images/icon_blood-cell.png');
-        		images.overlay 		= p.loadImage('images/overlay.png');
+        		images.heart 			= p.loadImage('blood-pressure-assets/images/icons_heart.png');
+        		images.valve 			= p.loadImage('blood-pressure-assets/images/icons_valve.png');
+        		images.needle 		= p.loadImage('blood-pressure-assets/images/icons_needle.png');
+        		images.bloodCell 	= p.loadImage('blood-pressure-assets/images/icon_blood-cell.png');
+        		images.overlay 		= p.loadImage('blood-pressure-assets/images/overlay.png');
         	};
         	p.setup = function() {
         		p.createCanvas(width, height);
