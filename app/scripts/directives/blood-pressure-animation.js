@@ -51,16 +51,16 @@ angular.module('life.animations.blood-pressure', [
 
   	    		// Artery walls:
   	    		var arteryStretchDistance = 20;
-  	    		var arteryWidth = 60, 
-  	    				arteryHalfWidth = arteryWidth/2;
+  	    		var arteryHeight = height*0.3;
 
   	    		var arteryMidY = height/2,
-  	    				arteryTopY = arteryMidY - arteryWidth/2,
-  	    				arteryBottomY = arteryMidY + arteryWidth/2;
+  	    				arteryTopY = arteryMidY - arteryHeight/2,
+  	    				arteryBottomY = arteryMidY + arteryHeight/2;
           		
           	var valveSize = height * 0.2;
           	var heartSize = height * 0.35;
 
+            var bloodCellBaseSize = height*0.04;
           	var bloodCellCount = 100;
           	var bloodCellSpeedMin = 5;
           	var bloodCellSpeedVariation = 15;
@@ -74,7 +74,7 @@ angular.module('life.animations.blood-pressure', [
           	function BloodCell(position, scale) {
           		this.position = position;
           		this.scale = scale;
-          		this.size = 10*scale;
+          		this.size = bloodCellBaseSize*scale;
           		this.rotation = p.PI*2*Math.random();
           	};
 
@@ -113,11 +113,12 @@ angular.module('life.animations.blood-pressure', [
           		p.frameRate(30);
 
           		_.times(bloodCellCount, function(i) {
-          			var yMin = arteryTopY-arteryStretchDistance,
-          					yMax = arteryBottomY+arteryStretchDistance,
+          			var yMin = arteryTopY, //-arteryStretchDistance,
+          					yMax = arteryBottomY, //+arteryStretchDistance,
           					yRange = yMax-yMin,
           					// An s-curve (with some randomness), to position cells mostly towards the center.
-          					y = (0.5 - 4*Math.pow(Math.random()-0.5, 3) + 0.01*(Math.random()-0.5)) * yRange + yMin;
+                    x = Math.random(),
+          					y = (0.6 - 3*Math.pow(x-0.5,3) - 0.2*x) * yRange + yMin;
 
           			bloodCells.push(
           					new BloodCell(
