@@ -20,17 +20,25 @@ angular.module('life.animations.blood-pressure', [
       	
         scope.id = '_bloodPressure-'+_.random(1000000,10000000);
 
-        // Ensure we take up as much space as permitted.
-        // element.css('position', 'absolute');
-        // element.css('top', 0);
-        // element.css('left', 0);
-        // element.css('height', '100%');
-        // element.css('width', '100%');
+        
 
         // Ensure the element has been instantiated
         $timeout(function() {
-        	var width = element.prop('clientWidth'), 
-        			height = element.prop('clientWidth');
+        	var width = element.prop('clientWidth'),
+              height = width;
+
+          if (!_.isUndefined(attrs.constrainHeight)) {
+            // Ensure we take up as much space as permitted.
+            element.css('position', 'absolute');
+            element.css('top', 0);
+            element.css('left', 0);
+            element.css('height', '100%');
+            element.css('width', '100%');
+
+            // Fit within the smallest dimension
+            height = element.prop('clientHeight');
+            width = height = Math.min(width, height);
+          }
         	
           new P5(function(p) {
 
