@@ -49,6 +49,10 @@ angular.module('life.animations.blood-pressure', [
   	      	var heartScaleChange = 0.2;
   	      	var heartbeatDuration = 2; // in seconds
 
+            var pressureVariation = 0.5;
+            var pressureCycleAuto = true;
+            var pressureCycleDuration = 20;
+
   	    		// Artery walls:
   	    		var arteryStretchDistance = 20;
   	    		var arteryHeight = height*0.3;
@@ -58,7 +62,7 @@ angular.module('life.animations.blood-pressure', [
   	    				arteryBottomY = arteryMidY + arteryHeight/2;
           		
           	var valveSize = height * 0.2;
-          	var heartSize = height * 0.35;
+          	var heartSize = height * 0.4;
 
             var bloodCellBaseSize = height*0.04;
           	var bloodCellCount = 100;
@@ -92,10 +96,10 @@ angular.module('life.animations.blood-pressure', [
           			this.rotation += bloodRotationAmount;
 
           			p.fill(255, 0, 0);
-          			p.imageMode(p.CENTER);
           			p.applyMatrix();
           			p.translate(this.position.x, this.position.y);
           			p.rotate(this.rotation);
+                p.imageMode(p.CENTER);
           			p.image(images.bloodCell, 0, 0, this.size, this.size);
           			p.resetMatrix();
           		},
@@ -107,6 +111,8 @@ angular.module('life.animations.blood-pressure', [
           		images.needle 		= p.loadImage('blood-pressure-assets/images/icons_needle.png');
           		images.bloodCell 	= p.loadImage('blood-pressure-assets/images/icon_blood-cell.png');
           		images.overlay 		= p.loadImage('blood-pressure-assets/images/overlay.png');
+              images.sliderBg   = p.loadImage('blood-pressure-assets/images/slider-bg.png');
+              images.sliderKnob = p.loadImage('blood-pressure-assets/images/slider-knob.png');
           	};
           	p.setup = function() {
           		p.createCanvas(width, height);
@@ -129,8 +135,6 @@ angular.module('life.animations.blood-pressure', [
           		});
           	};
           	p.draw = function() {
-          		p.clear();
-          		p.imageMode(p.CENTER);
 
           		// Heart beat
           		// TODO: change to something more heartbeaty
@@ -145,22 +149,6 @@ angular.module('life.animations.blood-pressure', [
           		});
 
           		var valveAmount = norm(pressure, pressureValveMin, pressureValveMax);
-
-          		// p.strokeWeight(2);
-          		// p.stroke(0);
-          		// // Gague pipe
-          		// p.line(width/2-2, valveSize, width/2-2, height/2);
-          		// p.line(width/2+2, valveSize, width/2+2, height/2);
-
-
-          		// p.curve(width*-0.5, arteryTopY+arteryBendCtrPt, 
-          		// 		0, arteryTopY, 
-          		// 		width, arteryTopY, 
-          		// 		width*1.5, arteryTopY+arteryBendCtrPt);
-          		// p.curve(width*-0.5, arteryBottomY-arteryBendCtrPt, 
-          		// 		0, arteryBottomY, 
-          		// 		width, arteryBottomY, 
-          		// 		width*1.5, arteryBottomY-arteryBendCtrPt);
           		
           		p.background(250,170,160);
 
@@ -202,7 +190,7 @@ angular.module('life.animations.blood-pressure', [
   						p.image(images.overlay, 0, 0, width, height);
 
   				    // Draw the heart:
-  				    var heartScale = 1 + norm(pressure, pressureNormalMin, pressureNormalMax) * heartScaleChange;
+  				    var heartScale = 1 - norm(pressure, pressureNormalMin, pressureNormalMax) * heartScaleChange;
   				    p.applyMatrix();
   				    p.translate(width-heartSize/2-valveSize/4, height-heartSize/2-valveSize/4);
   				    p.scale(heartScale);
@@ -220,6 +208,20 @@ angular.module('life.animations.blood-pressure', [
   				    p.imageMode(p.CENTER);
   				    p.image(images.needle,0,0,valveSize,valveSize);
   				    p.resetMatrix();
+
+              // Draw the slider:
+              var sliderRatio = 4; // must match the image
+              var sliderBgHeight = height*0.15;
+              var sliderKnobSize = height*0.10;
+
+              pressureVariation = (p.cos(p.millis()/1000*p.TWO_PI/pressureCycleDuration)+1)/2;
+
+              p.imageMode(p.CORNER);
+              p.image(images.sliderBg, 0, height-sliderBgHeight, sliderBgHeight*sliderRatio, sliderBgHeight);
+              p.imageMode(p.CENTER);
+              var sliderOffset = (sliderBgHeight*sliderRatio - sliderKnobSize) * pressureVariation;
+              p.image(images.sliderKnob, sliderKnobSize/2+sliderOffset, height-sliderBgHeight/2, sliderKnobSize, sliderKnobSize);
+
           	};
           }, scope.id);
         });
