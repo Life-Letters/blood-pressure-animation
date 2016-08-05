@@ -225,7 +225,7 @@ angular.module('life.animations.blood-pressure', [
   						p.image(images.overlay, 0, 0, width, height);
 
   				    // Draw the heart:
-  				    var heartScale = 1 - pressureRatio * heartScaleChange;
+  				    var heartScale = 1 - (0.5*heartbeat + 0.5*pressureRatio) * heartScaleChange;
   				    p.applyMatrix();
   				    p.translate(width-heartSize/2-valveSize/4, height-heartSize/2-valveSize/4);
   				    p.scale(heartScale);
