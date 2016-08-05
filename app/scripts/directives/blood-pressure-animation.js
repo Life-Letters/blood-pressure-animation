@@ -38,23 +38,29 @@ angular.module('life.animations.blood-pressure', [
         	
           new P5(function(p) {
 
-          	var pressureNormalMin = 80;
-  	      	var pressureNormalMax = 120;
-  	      	var pressureHighMin = 100;
-  	      	var pressureHighMax = 180;
+            var pressureDiaMin = 40;
+            var pressureDiaMax = 100;
+            var pressureDiaRange = pressureDiaMax - pressureDiaMin;
+
+            var pressureSysMin = 70;
+            var pressureSysMax = 190;
+            var pressureSysRange = pressureSysMax - pressureSysMin;
+
+            var pressureAbsMin = pressureDiaMin;
+            var pressureAbsMax = pressureSysMax;
 
   	      	var pressureValveMin = 0;
   	      	var pressureValveMax = 200;
 
-  	      	var heartScaleChange = 0.2;
-  	      	var heartbeatDuration = 2; // in seconds
+  	      	var heartScaleChange = 0.3;
+  	      	var heartbeatDuration = 1; // in seconds
 
             var pressureVariation = 0.5;
             var pressureCycleAuto = true;
-            var pressureCycleDuration = 20;
+            var pressureCycleDuration = 30;
 
   	    		// Artery walls:
-  	    		var arteryStretchDistance = 20;
+  	    		var arteryStretchDistance = height*0.03;
   	    		var arteryHeight = height*0.3;
 
   	    		var arteryMidY = height/2,
@@ -70,7 +76,6 @@ angular.module('life.animations.blood-pressure', [
           	var bloodCellSpeedVariation = 15;
           	var bloodRotationAmount = p.PI*0.01;
 
-          	var pressure = 80;
           	var heartReadings = [];
           	var bloodCells = [];
           	var images = {};
@@ -85,8 +90,8 @@ angular.module('life.animations.blood-pressure', [
           	BloodCell.prototype = {
           		constructor: BloodCell,
 
-          		draw: function(pressure) {
-          			this.position.x += this.scale * (bloodCellSpeedMin + bloodCellSpeedVariation * norm(pressure, pressureNormalMin, pressureHighMax));
+          		draw: function(pressureRatio) {
+          			this.position.x += this.scale * (bloodCellSpeedMin + bloodCellSpeedVariation * pressureRatio);
 
           			// Have we gone too far?
           			if ( this.position.x > width+this.size ) {
@@ -136,32 +141,37 @@ angular.module('life.animations.blood-pressure', [
           	};
           	p.draw = function() {
 
+              pressureVariation = (p.cos(p.millis()/1000*p.TWO_PI/pressureCycleDuration-p.PI/2) + 1) / 2;
+              var pressureMin = pressureVariation*pressureDiaRange+pressureDiaMin;
+              var pressureMax = pressureVariation*pressureSysRange+pressureSysMin;
+
           		// Heart beat
-          		// TODO: change to something more heartbeaty
-          		pressure = pressureNormalMin + (p.sin(p.millis()/1000*2*p.PI/heartbeatDuration)+1)/2*(pressureNormalMax-pressureNormalMin);
-
-          		heartReadings.push(pressure);
-          		if (heartReadings.length > width) {
-          			heartReadings = _.tail(heartReadings);
-          		}
-          		_.each(heartReadings, function(r, i) {
-          			p.point(i, height - r);
-          		});
-
-          		var valveAmount = norm(pressure, pressureValveMin, pressureValveMax);
+          		var heartbeat = (p.cos(p.millis()/1000*p.TWO_PI/heartbeatDuration) + 1) / 2;
+              var pressureCurrent = heartbeat*(pressureMax-pressureMin)+pressureMin;
+              var pressureRatio = norm(pressureCurrent, pressureAbsMin, pressureAbsMax);
           		
+              // Cardiograph
+              // heartReadings.push(pressureCurrent);
+              // if (heartReadings.length > width) {
+              // 	heartReadings = _.tail(heartReadings);
+              // }
+              // _.each(heartReadings, function(r, i) {
+              // 	p.point(i, height - r);
+              // });
+
           		p.background(250,170,160);
 
           		// Blood cells:
           		_.each(bloodCells, function(cell) {
-          			cell.draw(pressure);
+          			cell.draw(pressureRatio);
           		});
 
           		// Artery (in reverse, i.e. we draw the surrounding whitespace)
-      				var arteryBendCtrPt = arteryStretchDistance * norm(pressure, pressureNormalMin, pressureHighMax);
+      				var arteryBendCtrPt = arteryStretchDistance * pressureRatio;
           		p.fill(255);
           		p.stroke(200,70,50);
           		p.strokeWeight(5);
+              // Top wall
   						p.beginShape();
   						p.curveVertex(-width, -height);
   						p.curveVertex(-width, -height);
@@ -173,7 +183,7 @@ angular.module('life.animations.blood-pressure', [
   						p.curveVertex(2*width, -height);
   						p.curveVertex(2*width, -height);
   						p.endShape();
-
+              // Bottom wall
   						p.beginShape();
   						p.curveVertex(2*width, height*2);
   						p.curveVertex(2*width, height*2);
@@ -185,12 +195,12 @@ angular.module('life.animations.blood-pressure', [
   						p.curveVertex(-width, height*2);
   						p.curveVertex(-width, height*2);
   						p.endShape();
-
+              // Magnifying glass
   						p.imageMode(p.CORNER);
   						p.image(images.overlay, 0, 0, width, height);
 
   				    // Draw the heart:
-  				    var heartScale = 1 - norm(pressure, pressureNormalMin, pressureNormalMax) * heartScaleChange;
+  				    var heartScale = 1 - pressureRatio * heartScaleChange;
   				    p.applyMatrix();
   				    p.translate(width-heartSize/2-valveSize/4, height-heartSize/2-valveSize/4);
   				    p.scale(heartScale);
@@ -199,6 +209,7 @@ angular.module('life.animations.blood-pressure', [
           		p.resetMatrix();
 
           		// Valve
+              var valveAmount = norm(pressureCurrent, pressureValveMin, pressureValveMax); 
           		p.applyMatrix();
   				    p.translate(width-valveSize/2-5, height-valveSize/2-5);
           		p.image(images.valve,0,0,valveSize,valveSize);
@@ -213,8 +224,6 @@ angular.module('life.animations.blood-pressure', [
               var sliderRatio = 4; // must match the image
               var sliderBgHeight = height*0.15;
               var sliderKnobSize = height*0.10;
-
-              pressureVariation = (p.cos(p.millis()/1000*p.TWO_PI/pressureCycleDuration)+1)/2;
 
               p.imageMode(p.CORNER);
               p.image(images.sliderBg, 0, height-sliderBgHeight, sliderBgHeight*sliderRatio, sliderBgHeight);
