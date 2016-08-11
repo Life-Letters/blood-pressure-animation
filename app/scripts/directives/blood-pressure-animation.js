@@ -60,19 +60,18 @@ angular.module('life.animations.blood-pressure', [
   	      	var heartbeatDuration = 1; // in seconds
 
             var pressureVariation = 0.5;
-            var pressureCycleAuto = true;
+            var pressureCycleAuto = false; //true;
             var pressureCycleDuration = 30;
 
   	    		// Artery walls:
-  	    		var arteryStretchDistance = height*0.03;
+  	    		var arteryStretchDistance = height*0.05;
   	    		var arteryHeight = height*0.3;
 
   	    		var arteryMidY = height/2,
   	    				arteryTopY = arteryMidY - arteryHeight/2,
   	    				arteryBottomY = arteryMidY + arteryHeight/2;
           		
-          	var valveSize = height * 0.2;
-          	var heartSize = height * 0.4;
+          	var heartSize = height * 0.2;
 
             var bloodCellBaseSize = height*0.04;
           	var bloodCellCount = 100;
@@ -83,13 +82,14 @@ angular.module('life.animations.blood-pressure', [
             var sliderBgHeight = height*0.15;
             var sliderBgWidth = sliderBgHeight * 4; // must match the image ratio
             var sliderKnobSize = height*0.10;
+            var sliderOffsetHor = (width-sliderBgWidth)/2;
 
           	var heartReadings = [];
           	var bloodCells = [];
           	var images = {};
 
             // Current state, updated per frame
-            var sliderOffset = 0;
+            var sliderKnobOffset = 0;
             var pressureCurrent = 0;
             var pressureRatio = 0;
 
@@ -154,8 +154,8 @@ angular.module('life.animations.blood-pressure', [
           	};
             var knobDragX = -1;
             p.mousePressed = function() {
-              if (p.mouseX > sliderOffset && 
-                  p.mouseX < sliderOffset + sliderKnobSize &&
+              if (p.mouseX > sliderKnobOffset && 
+                  p.mouseX < sliderKnobOffset + sliderKnobSize &&
                   p.mouseY > height-sliderBgHeight/2-sliderKnobSize/2 &&
                   p.mouseY < height-sliderBgHeight/2+sliderKnobSize/2) {
                 pressureCycleAuto = false;
@@ -167,7 +167,7 @@ angular.module('life.animations.blood-pressure', [
             };
             p.mouseDragged = function() {
               if ( knobDragX < 0 ) { return; }
-              pressureVariation = p.constrain(p.norm(p.mouseX, sliderKnobSize/2, sliderBgWidth-sliderKnobSize/2), 0, 1);
+              pressureVariation = p.constrain(p.norm(p.mouseX, sliderOffsetHor+sliderKnobSize/2, sliderOffsetHor+sliderBgWidth-sliderKnobSize/2), 0, 1);
             };
           	p.draw = function() {
 
@@ -181,7 +181,7 @@ angular.module('life.animations.blood-pressure', [
           		var heartbeat = (p.cos(p.millis()/1000*p.TWO_PI/heartbeatDuration) + 1) / 2;
               pressureCurrent = heartbeat*(pressureMax-pressureMin)+pressureMin;
               pressureRatio = p.norm(pressureCurrent, pressureAbsMin, pressureAbsMax);
-              sliderOffset = (sliderBgWidth - sliderKnobSize) * pressureVariation;
+              sliderKnobOffset = sliderOffsetHor + (sliderBgWidth - sliderKnobSize) * pressureVariation;
           		
               // Cardiograph
               // heartReadings.push(pressureCurrent);
@@ -233,19 +233,20 @@ angular.module('life.animations.blood-pressure', [
   						p.image(images.overlay, 0, 0, width, height);
 
   				    // Draw the heart:
-  				    var heartScale = 1 - (0.5*heartbeat + 0.5*pressureRatio) * heartScaleChange;
+  				    var heartScale = 1 - pressureRatio * heartScaleChange;
   				    p.applyMatrix();
-  				    p.translate(width-heartSize/2-valveSize/4, height-heartSize/2-valveSize/4);
+  				    p.translate(heartSize*0.45, height/2);
   				    p.scale(heartScale);
   				    p.imageMode(p.CENTER);
           		p.image(images.heart,0,0,heartSize,heartSize);
           		p.resetMatrix();
 
           		// Valve
-              var valveAmount = p.norm(pressureCurrent, pressureValveMin, pressureValveMax); 
+              var valveAmount = p.norm(pressureCurrent, pressureValveMin, pressureValveMax);
+              var valveSize = height * 0.1;
           		p.applyMatrix();
-  				    p.translate(width-valveSize/2-5, height-valveSize/2-5);
-          		p.image(images.valve,0,0,valveSize,valveSize);
+  				    p.translate(heartSize*0.45, height*0.325);
+          		// p.image(images.valve,0,0,valveSize,valveSize);
           		// Needle
           		p.angleMode(p.RADIANS);
   				    p.rotate(p.PI*valveAmount - p.PI/2);
@@ -255,9 +256,19 @@ angular.module('life.animations.blood-pressure', [
 
               // Draw the slider:
               p.imageMode(p.CORNER);
-              p.image(images.sliderBg, 0, height-sliderBgHeight, sliderBgWidth, sliderBgHeight);
+              p.image(images.sliderBg, sliderOffsetHor, height-sliderBgHeight, sliderBgWidth, sliderBgHeight);
               p.imageMode(p.CENTER);
-              p.image(images.sliderKnob, sliderKnobSize/2+sliderOffset, height-sliderBgHeight/2, sliderKnobSize, sliderKnobSize);
+              p.image(images.sliderKnob, sliderKnobSize/2+sliderKnobOffset, height-sliderBgHeight/2, sliderKnobSize, sliderKnobSize);
+
+              p.fill(0);
+              p.noStroke();
+              p.textFont('Helvetica');
+              p.textAlign(p.CENTER);
+              p.textSize(height/10);
+              p.text(Math.round(pressureMax)+'/'+Math.round(pressureMin), 0, 0, width, height*0.4);
+              p.textSize(height/40);
+              p.text('systolic / diastolic', 0, height*0.1, width, height*0.4);
+
 
           	};
           }, scope.id);
